@@ -106,6 +106,16 @@
                                             <option value="MEMÓRIAS (3x de R$ 800,00)">MEMÓRIAS (3x de R$ 800,00)</option>
                                         </select>
                                     </div>
+                                    <div id="infantilPackageSection" class="hidden">
+                                        <label for="infantilPackage" class="block text-sm font-medium text-gray-700 mb-1">Pacote Infantil</label>
+                                        <select id="infantilPackage" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="" disabled selected>Selecione um pacote...</option>
+                                            <option value="Diamante (4x de R$ 650,00)">Diamante (4x de R$ 650,00)</option>
+                                            <option value="Ouro (3x de R$ 600,00)">Ouro (3x de R$ 600,00)</option>
+                                            <option value="Prata (2x de R$ 600,00)">Prata (2x de R$ 600,00)</option>
+                                            <option value="Bronze (2x de R$ 550,00)">Bronze (2x de R$ 550,00)</option>
+                                        </select>
+                                    </div>
                                      <div>
                                         <label for="package" class="block text-sm font-medium text-gray-700 mb-1">Pacote Escolhido / Descrição do Serviço</label>
                                         <textarea id="package" rows="3" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Descreva o serviço ou pacote contratado." required></textarea>
@@ -232,25 +242,35 @@ Autoriza uso de imagem: Sim</textarea>
         document.getElementById('contractType').addEventListener('change', (e) => {
             const eventDetails = document.getElementById('eventDetails');
             const weddingPackageSection = document.getElementById('weddingPackageSection');
+            const infantilPackageSection = document.getElementById('infantilPackageSection');
             const packageLabel = document.querySelector('label[for="package"]');
             const packageTextarea = document.getElementById('package');
             
-            if (e.target.value === '4') { // Entrada de Dados
-                eventDetails.classList.add('hidden');
-            } else {
-                eventDetails.classList.remove('hidden');
-            }
+            // Reset visibility
+            weddingPackageSection.classList.add('hidden');
+            infantilPackageSection.classList.add('hidden');
+            eventDetails.classList.remove('hidden');
+            
+            packageLabel.textContent = 'Pacote Escolhido / Descrição do Serviço';
+            packageTextarea.placeholder = 'Descreva o serviço ou pacote contratado.';
+            packageTextarea.required = true;
 
-            if (e.target.value === '2') { // Casamento
-                weddingPackageSection.classList.remove('hidden');
-                packageLabel.textContent = 'Observações / Itens Adicionais';
-                packageTextarea.placeholder = 'Adicione itens não inclusos no pacote padrão ou outras observações.';
-                packageTextarea.required = false;
-            } else {
-                weddingPackageSection.classList.add('hidden');
-                packageLabel.textContent = 'Pacote Escolhido / Descrição do Serviço';
-                packageTextarea.placeholder = 'Descreva o serviço ou pacote contratado.';
-                packageTextarea.required = true;
+            switch(e.target.value) {
+                case '1': // Infantil
+                    infantilPackageSection.classList.remove('hidden');
+                    packageLabel.textContent = 'Observações / Itens Adicionais';
+                    packageTextarea.placeholder = 'Adicione itens não inclusos no pacote padrão ou outras observações.';
+                    packageTextarea.required = false;
+                    break;
+                case '2': // Casamento
+                    weddingPackageSection.classList.remove('hidden');
+                    packageLabel.textContent = 'Observações / Itens Adicionais';
+                    packageTextarea.placeholder = 'Adicione itens não inclusos no pacote padrão ou outras observações.';
+                    packageTextarea.required = false;
+                    break;
+                case '4': // Entrada de Dados
+                    eventDetails.classList.add('hidden');
+                    break;
             }
         });
 
@@ -272,6 +292,29 @@ Autoriza uso de imagem: Sim</textarea>
                     break;
                 case 'MEMÓRIAS (3x de R$ 800,00)':
                     totalValue = '2400.00';
+                    break;
+            }
+            valueInput.value = totalValue;
+        });
+        
+        // Preencher valor do contrato ao selecionar pacote infantil
+        document.getElementById('infantilPackage').addEventListener('change', (e) => {
+            const packageValue = e.target.value;
+            const valueInput = document.getElementById('value');
+            let totalValue = '';
+
+            switch (packageValue) {
+                case 'Diamante (4x de R$ 650,00)':
+                    totalValue = '2600.00';
+                    break;
+                case 'Ouro (3x de R$ 600,00)':
+                    totalValue = '1800.00';
+                    break;
+                case 'Prata (2x de R$ 600,00)':
+                    totalValue = '1200.00';
+                    break;
+                case 'Bronze (2x de R$ 550,00)':
+                    totalValue = '1100.00';
                     break;
             }
             valueInput.value = totalValue;
@@ -322,7 +365,7 @@ Autoriza uso de imagem: Sim</textarea>
             const fields = [
                 'contractType', 'eventDate', 'eventTime', 'eventDuration', 'eventLocal', 'package', 'value', 'paymentMethod', 'rules',
                 'clientName', 'clientCPF', 'clientRG',
-                'clientAddress', 'clientEmail', 'clientPhone', 'imageRights', 'weddingPackage'
+                'clientAddress', 'clientEmail', 'clientPhone', 'imageRights', 'weddingPackage', 'infantilPackage'
             ];
             fields.forEach(id => {
                 const element = document.getElementById(id);
@@ -345,6 +388,7 @@ Autoriza uso de imagem: Sim</textarea>
                 'pacote': 'package',
                 'observações / itens adicionais': 'package',
                 'pacote de casamento': 'weddingPackage',
+                'pacote infantil': 'infantilPackage',
                 'valor do contrato': 'value',
                 'forma de pagamento': 'paymentMethod',
                 'regras adicionais': 'rules',
@@ -390,6 +434,9 @@ Autoriza uso de imagem: Sim</textarea>
         }
 
         function generateContractText(data) {
+            if (data.contractType === '1') {
+                return generateInfantilContract(data);
+            }
             if (data.contractType === '2') {
                 return generateWeddingContract(data);
             }
@@ -400,8 +447,7 @@ Autoriza uso de imagem: Sim</textarea>
             
             let title = 'CONTRATO DE PRESTAÇÃO DE SERVIÇOS';
             let objectClause = `O objeto do presente contrato é a prestação de serviços de ${data.package || '[Descrição do Pacote]'}.`;
-            if (data.contractType === '1') title = 'CONTRATO DE PRESTAÇÃO DE SERVIÇOS PARA FESTA INFANTIL';
-            if (data.contractType === '3') title = 'CONTRATO DE PRESTAÇÃO DE SERVIÇOS PARA EVENTOS EM GERAL';
+             if (data.contractType === '3') title = 'CONTRATO DE PRESTAÇÃO DE SERVIÇOS PARA EVENTOS EM GERAL';
             if (data.contractType === '4') title = 'CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE ENTRADA DE DADOS';
 
             return `
@@ -427,6 +473,128 @@ ${data.clientName || '[Nome do Cliente]'}
 _________________________________________
 Wilkson Albuquerque Carvalho
 (CONTRATADO)
+`;
+        }
+
+        function generateInfantilContract(data) {
+            const today = new Date();
+            const city = "Imperatriz";
+            const contractor = {
+                name: "Wilkson Albuquerque Carvalho",
+                cpf: "646.660.003-30",
+                address: "Rua das Araras, 11, Imperatriz - MA",
+                email: "wilkson@gmail.com",
+                phone: "(99) 99111-1456"
+            };
+
+            const eventDateFormatted = data.eventDate ? new Date(data.eventDate).toLocaleDateString('pt-BR', {timeZone: 'UTC'}) : '[Data do Evento]';
+            const startTime = data.eventTime || '[Hora de Início]';
+            let endTime = '[Hora de Término]';
+            if(data.eventTime && data.eventDuration) {
+                const [hours, minutes] = data.eventTime.split(':').map(Number);
+                const startDateTime = new Date();
+                startDateTime.setHours(hours, minutes, 0, 0);
+                startDateTime.setHours(startDateTime.getHours() + Number(data.eventDuration));
+                endTime = startDateTime.toTimeString().substring(0,5);
+            }
+
+            const imageRightsClause = data.imageRights ? 
+                '6.1. O(A) CONTRATANTE autoriza o CONTRATADO a utilizar as fotografias oriundas deste contrato em seu portfólio (físico e online), redes sociais, site, concursos fotográficos e exposições, com o objetivo de divulgar seu trabalho, sem que isso acarrete qualquer ônus.' :
+                '6.1. O(A) CONTRATANTE NÃO AUTORIZA o CONTRATADO a utilizar as fotografias em seu portfólio, redes sociais ou qualquer meio de divulgação.';
+
+            const packageSelection = data.infantilPackage ? `    Pacote Selecionado: ${data.infantilPackage}\n\n` : '';
+            const observations = data.package ? `\n    Observações Adicionais: ${data.package}` : '';
+            
+            let deliverables = '';
+            switch (data.infantilPackage) {
+                case 'Diamante (4x de R$ 650,00)':
+                    deliverables = `    a) 20 (vinte) fotos do ensaio.
+    b) Todas as fotos do evento em alta resolução.
+    c) Pequeno vídeo para Reels (captado por celular).
+    d) Álbum 20x30 com 28 páginas e estojo.
+    e) Pen drive personalizado.`;
+                    break;
+                case 'Ouro (3x de R$ 600,00)':
+                    deliverables = `    a) Todas as fotos do evento em alta resolução.
+    b) Álbum 20x30 com 20 páginas e estojo.
+    c) Pen drive personalizado.`;
+                    break;
+                case 'Prata (2x de R$ 600,00)':
+                    deliverables = `    a) Todas as fotos do evento em alta resolução.
+    b) Pen drive personalizado.`;
+                    break;
+                case 'Bronze (2x de R$ 550,00)':
+                    deliverables = `    a) 100 (cem) fotos da festa.
+    b) Fotos entregues via galeria online.`;
+                    break;
+                default:
+                    deliverables = `    a) [Itens a serem entregues não especificados - selecione um pacote].`;
+            }
+
+            return `
+CONTRATO DE PRESTAÇÃO DE SERVIÇOS FOTOGRÁFICOS – EVENTO INFANTIL
+
+PARTES
+
+CONTRATANTE: ${data.clientName || '[Nome do Cliente]'}, portador(a) do CPF nº ${data.clientCPF || '[CPF]'} e RG nº ${data.clientRG || '[RG]'}, residente e domiciliado(a) em ${data.clientAddress || '[Endereço]'}, doravante denominado(a) CONTRATANTE.
+
+CONTRATADO: ${contractor.name}, fotógrafo, portador do CPF nº ${contractor.cpf}, com endereço profissional em ${contractor.address}, e-mail: ${contractor.email}, telefone: ${contractor.phone}, doravante denominado CONTRATADO.
+
+As partes acima qualificadas firmam o presente contrato, que se regerá pelas seguintes cláusulas e condições:
+
+CLÁUSULA 1ª – DO OBJETO
+1.1. O presente contrato tem por objeto a prestação de serviços de cobertura fotográfica da festa infantil a ser realizada em ${eventDateFormatted}.
+1.2. O serviço contratado compreende:
+    a) Cobertura fotográfica por ${data.eventDuration || '[Nº]'} horas consecutivas.
+    b) Início dos serviços às ${startTime} e término às ${endTime} no local da festa.
+    c) A cobertura incluirá os principais momentos do evento, como a recepção dos convidados, decoração, brincadeiras, o momento do "Parabéns" e fotos com familiares.
+
+CLÁUSULA 2ª – DO PACOTE E ENTREGA DO MATERIAL
+2.1. O material a ser entregue pelo CONTRATADO ao(à) CONTRATANTE consiste em:
+${packageSelection}${deliverables}${observations}
+2.2. O prazo para entrega do material digital é de até 60 (sessenta) dias úteis, contados a partir do primeiro dia útil após a data do evento.
+2.3. Fica expressamente acordado que os arquivos brutos (formato RAW) não serão entregues em nenhuma hipótese, pois compõem o processo de trabalho e a propriedade intelectual do CONTRATADO.
+
+CLÁUSULA 3ª – DAS OBRIGAÇÕES
+3.1. Compete ao CONTRATADO:
+    a) Prestar o serviço com zelo e profissionalismo, utilizando equipamento profissional adequado.
+    b) Respeitar a data, horários e locais acordados.
+    c) Realizar o backup e armazenamento seguro dos arquivos por um período de 12 (doze) meses após a entrega final do material.
+3.2. Compete ao CONTRATANTE:
+    a) Realizar os pagamentos nas datas e valores acordados na Cláusula 4ª.
+    b) Fornecer as condições necessárias para a execução do trabalho, incluindo um local seguro para os equipamentos.
+    c) Informar ao CONTRATADO sobre qualquer momento específico ou pessoa que exija atenção especial durante o evento.
+
+CLÁUSULA 4ª – DO VALOR E FORMA DE PAGAMENTO
+4.1. O valor total deste contrato é de R$ ${parseFloat(data.value || 0).toFixed(2)}.
+4.2. O pagamento será realizado da seguinte forma: ${data.paymentMethod || '[Forma de Pagamento]'}.
+
+CLÁUSULA 5ª – DA REMARCAÇÃO E CANCELAMENTO
+5.1. Remarcação pelo CONTRATANTE: A solicitação de remarcação deve ser feita por escrito com no mínimo 30 dias de antecedência. A nova data estará sujeita à disponibilidade na agenda do CONTRATADO.
+5.2. Cancelamento pelo CONTRATANTE (Rescisão): Em caso de rescisão por parte do(a) CONTRATANTE, será retido o valor do sinal a título de multa e perdas e danos. Se o cancelamento ocorrer com menos de 30 dias de antecedência, a multa será de 50% do valor total do contrato.
+5.3. Impossibilidade do CONTRATADO: Na eventualidade de o CONTRATADO não poder comparecer por motivo de força maior, ele se compromete a enviar outro fotógrafo qualificado. Caso não seja possível, o contrato será rescindido e todos os valores pagos serão devolvidos integralmente.
+
+CLÁUSULA 6ª – DO DIREITO DE USO DE IMAGEM
+${imageRightsClause}
+
+CLÁUSULA 7ª – DO CASO FORTUITO OU FORÇA MAIOR
+7.1. Nenhuma das partes será responsabilizada pelo não cumprimento de suas obrigações se este for causado por eventos de caso fortuito ou força maior. Nesses casos, a data do evento será remarcada em comum acordo, sem custos adicionais, no prazo de até 12 meses.
+
+CLÁUSULA 8ª – DO FORO
+8.1. Fica eleito o foro da Comarca de Imperatriz, Estado do Maranhão, para dirimir quaisquer dúvidas ou litígios oriundos do presente contrato.
+
+E, por estarem justos e contratados, assinam o presente instrumento em 2 (duas) vias de igual teor e forma.
+
+${city}/MA, ${today.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}.
+
+
+_________________________________________
+${data.clientName || '[Nome do Cliente]'}
+CPF: ${data.clientCPF || '[CPF]'}
+
+_________________________________________
+${contractor.name}
+CPF: ${contractor.cpf}
 `;
         }
 
