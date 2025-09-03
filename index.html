@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Contratos de Prestação de Serviços</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .form-input:focus {
+            ring: 2px;
+            ring-offset: 2px;
+        }
+        .tab-button {
+            transition: all 0.3s;
+        }
+        .tab-button.active {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #contractOutput, #contractOutput * {
+                visibility: visible;
+            }
+            #contractOutput {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 p-4 sm:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Gerador de Contratos</h1>
+            <p class="text-gray-600 mt-2">Preencha os campos para gerar seu contrato de prestação de serviços.</p>
+        </header>
+
+        <main class="bg-white p-6 sm:p-8 rounded-xl shadow-md">
+            <!-- Abas de Navegação -->
+            <div class="mb-6 border-b border-gray-200">
+                <nav class="flex -mb-px space-x-4" aria-label="Tabs">
+                    <button id="tab-form" class="tab-button active whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm">Formulário Detalhado</button>
+                    <button id="tab-text" class="tab-button whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Entrada Rápida por Texto</button>
+                </nav>
+            </div>
+
+            <form id="contractForm">
+                <!-- Conteúdo da Aba Formulário -->
+                <div id="content-form">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                        <!-- Coluna Esquerda: Detalhes do Contrato e Financeiro -->
+                        <div class="space-y-6">
+                            <section>
+                                <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-blue-600">Detalhes do Contrato</h2>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label for="contractType" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Contrato</label>
+                                        <select id="contractType" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                                            <option value="" disabled selected>Selecione o tipo...</option>
+                                            <option value="1">Festa Infantil</option>
+                                            <option value="2">Casamento</option>
+                                            <option value="3">Eventos em Geral</option>
+                                            <option value="4">Entrada de Dados</option>
+                                        </select>
+                                    </div>
+                                    <div id="eventDetails" class="space-y-4">
+                                        <div>
+                                            <label for="eventDate" class="block text-sm font-medium text-gray-700 mb-1">Data do Evento</o>
+                                            <input type="date" id="eventDate" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                        </div>
+                                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="eventTime" class="block text-sm font-medium text-gray-700 mb-1">Hora de Início</label>
+                                                <input type="time" id="eventTime" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                            </div>
+                                            <div>
+                                                <label for="eventDuration" class="block text-sm font-medium text-gray-700 mb-1">Duração (horas)</label>
+                                                <input type="number" id="eventDuration" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ex: 8">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="eventLocal" class="block text-sm font-medium text-gray-700 mb-1">Local do Evento</label>
+                                            <input type="text" id="eventLocal" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Salão de Festas X">
+                                        </div>
+                                    </div>
+                                     <div id="weddingPackageSection" class="hidden">
+                                        <label for="weddingPackage" class="block text-sm font-medium text-gray-700 mb-1">Pacote de Casamento</label>
+                                        <select id="weddingPackage" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="" disabled selected>Selecione um pacote...</option>
+                                            <option value="AMOR ETERNO (4x de R$ 1.050,00)">AMOR ETERNO (4x de R$ 1.050,00)</option>
+                                            <option value="ALIANÇAS DOURADAS (4x de R$ 925,00)">ALIANÇAS DOURADAS (4x de R$ 925,00)</option>
+                                            <option value="LUA DE MEL (3x de R$ 950,00)">LUA DE MEL (3x de R$ 950,00)</option>
+                                            <option value="MEMÓRIAS (3x de R$ 800,00)">MEMÓRIAS (3x de R$ 800,00)</option>
+                                        </select>
+                                    </div>
+                                     <div>
+                                        <label for="package" class="block text-sm font-medium text-gray-700 mb-1">Pacote Escolhido / Descrição do Serviço</label>
+                                        <textarea id="package" rows="3" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Descreva o serviço ou pacote contratado." required></textarea>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <h2 class="text-xl font-semibold mt-6 mb-4 border-b pb-2 text-blue-600">Detalhes Financeiros</h2>
+                                <div class="space-y-4">
+                                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="value" class="block text-sm font-medium text-gray-700 mb-1">Valor do Contrato (R$)</label>
+                                            <input type="number" id="value" step="0.01" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="2850.00" required>
+                                        </div>
+                                        <div>
+                                            <label for="paymentMethod" class="block text-sm font-medium text-gray-700 mb-1">Forma de Pagamento</label>
+                                            <input type="text" id="paymentMethod" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ex: 50% de sinal..." required>
+                                        </div>
+                                   </div>
+                                     <div>
+                                        <label for="rules" class="block text-sm font-medium text-gray-700 mb-1">Regras e Cláusulas Adicionais</label>
+                                        <textarea id="rules" rows="3" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ex: Prazo de entrega do material: 30 dias."></textarea>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+
+                        <!-- Coluna Direita: Dados do Contratante -->
+                        <section>
+                             <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-green-600">Dados do Contratante (Cliente)</h2>
+                            <div class="space-y-4">
+                                <input type="text" id="clientName" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" placeholder="Nome Completo" required>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <input type="text" id="clientCPF" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" placeholder="CPF" required>
+                                    <input type="text" id="clientRG" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" placeholder="RG">
+                                </div>
+                                <input type="text" id="clientAddress" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" placeholder="Endereço Completo com CEP" required>
+                                <input type="email" id="clientEmail" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" placeholder="E-mail" required>
+                                <input type="tel" id="clientPhone" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" placeholder="Telefone com DDD" required>
+                                <div class="pt-2">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="imageRights" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                        <span class="ml-2 text-sm text-gray-700">Autoriza o uso de imagem para portfólio?</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- Conteúdo da Aba Texto Rápido -->
+                <div id="content-text" class="hidden">
+                    <label for="quickText" class="block text-sm font-medium text-gray-700 mb-2">Entrada de Dados Rápida</label>
+                    <p class="text-xs text-gray-500 mb-3">Complete os dados abaixo. O sistema irá distribuir as informações automaticamente no contrato selecionado.</p>
+                    <textarea id="quickText" rows="15" class="w-full form-input p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">Tipo de Contrato: Casamento
+Nome Completo: 
+CPF: 
+Endereço: 
+Email: 
+Telefone: 
+Data do Evento: 
+Hora de Início: 
+Duração (horas): 08 horas
+Local do Evento: 
+Pacote de Casamento: 
+Forma de Pagamento: Entrada e o restante dividido.
+Autoriza uso de imagem: Sim</textarea>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button type="button" id="generateButton" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-lg shadow-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                        Gerar Contrato
+                    </button>
+                </div>
+            </form>
+        </main>
+        
+        <section id="outputSection" class="mt-10 bg-white p-6 sm:p-8 rounded-xl shadow-md hidden">
+            <h2 class="text-2xl font-bold text-center mb-6">Contrato Gerado</h2>
+            <div id="contractOutput" class="bg-gray-50 border border-gray-200 rounded-lg p-6 whitespace-pre-wrap text-sm" style="font-family: 'Courier New', Courier, monospace;"></div>
+            <div class="mt-6 flex flex-col sm:flex-row justify-center items-center gap-4 no-print">
+                <button id="copyButton" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg">Copiar Texto</button>
+                <button id="printButton" class="w-full sm:w-auto bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-6 rounded-lg">Imprimir / Salvar PDF</button>
+            </div>
+            <div id="copySuccess" class="mt-4 text-center text-green-600 font-medium hidden">Contrato copiado!</div>
+        </section>
+
+        <footer class="text-center mt-12 text-gray-500 text-sm">
+            <p>&copy; 2024 Gerador de Contratos. Ferramenta para auxílio na criação de documentos.</p>
+        </footer>
+    </div>
+
+    <script>
+        const tabForm = document.getElementById('tab-form');
+        const tabText = document.getElementById('tab-text');
+        const contentForm = document.getElementById('content-form');
+        const contentText = document.getElementById('content-text');
+        const contractForm = document.getElementById('contractForm');
+        const generateButton = document.getElementById('generateButton');
+        const outputSection = document.getElementById('outputSection');
+        const contractOutput = document.getElementById('contractOutput');
+        
+        let activeTab = 'form';
+
+        // Lógica de troca de abas
+        tabForm.addEventListener('click', () => {
+            activeTab = 'form';
+            tabForm.classList.add('active');
+            tabText.classList.remove('active');
+            contentForm.classList.remove('hidden');
+            contentText.classList.add('hidden');
+        });
+
+        tabText.addEventListener('click', () => {
+            activeTab = 'text';
+            tabText.classList.add('active');
+            tabForm.classList.remove('active');
+            contentText.classList.remove('hidden');
+            contentForm.classList.add('hidden');
+        });
+
+        // Ocultar/mostrar campos de evento
+        document.getElementById('contractType').addEventListener('change', (e) => {
+            const eventDetails = document.getElementById('eventDetails');
+            const weddingPackageSection = document.getElementById('weddingPackageSection');
+            const packageLabel = document.querySelector('label[for="package"]');
+            const packageTextarea = document.getElementById('package');
+            
+            if (e.target.value === '4') { // Entrada de Dados
+                eventDetails.classList.add('hidden');
+            } else {
+                eventDetails.classList.remove('hidden');
+            }
+
+            if (e.target.value === '2') { // Casamento
+                weddingPackageSection.classList.remove('hidden');
+                packageLabel.textContent = 'Observações / Itens Adicionais';
+                packageTextarea.placeholder = 'Adicione itens não inclusos no pacote padrão ou outras observações.';
+                packageTextarea.required = false;
+            } else {
+                weddingPackageSection.classList.add('hidden');
+                packageLabel.textContent = 'Pacote Escolhido / Descrição do Serviço';
+                packageTextarea.placeholder = 'Descreva o serviço ou pacote contratado.';
+                packageTextarea.required = true;
+            }
+        });
+
+        // Preencher valor do contrato ao selecionar pacote de casamento
+        document.getElementById('weddingPackage').addEventListener('change', (e) => {
+            const packageValue = e.target.value;
+            const valueInput = document.getElementById('value');
+            let totalValue = '';
+
+            switch (packageValue) {
+                case 'AMOR ETERNO (4x de R$ 1.050,00)':
+                    totalValue = '4200.00';
+                    break;
+                case 'ALIANÇAS DOURADAS (4x de R$ 925,00)':
+                    totalValue = '3700.00';
+                    break;
+                case 'LUA DE MEL (3x de R$ 950,00)':
+                    totalValue = '2850.00';
+                    break;
+                case 'MEMÓRIAS (3x de R$ 800,00)':
+                    totalValue = '2400.00';
+                    break;
+            }
+            valueInput.value = totalValue;
+        });
+
+        // Lógica de submissão do formulário
+        generateButton.addEventListener('click', () => {
+            if (activeTab === 'text') {
+                parseQuickTextData(); // Popula o formulário a partir do texto rápido
+            }
+            
+            // Validação manual simples para campos visíveis
+            if (activeTab === 'form' && !contractForm.checkValidity()) {
+                contractOutput.textContent = 'ERRO: Por favor, preencha todos os campos obrigatórios (*) no formulário detalhado.';
+                contractOutput.style.color = 'red';
+                contractOutput.style.fontWeight = 'bold';
+                document.getElementById('outputSection').querySelector('h2').textContent = 'Erro na Validação';
+                outputSection.classList.remove('hidden');
+                window.scrollTo({ top: outputSection.offsetTop - 20, behavior: 'smooth' });
+                 // Força o navegador a mostrar quais campos são inválidos
+                contractForm.reportValidity();
+                return;
+            }
+
+            const data = getFormData(); // Sempre obtém os dados do formulário visual
+
+            if (!data.contractType) {
+                contractOutput.textContent = 'ERRO: O "Tipo de Contrato" é um campo obrigatório. Por favor, selecione uma opção para continuar.';
+                contractOutput.style.color = 'red';
+                contractOutput.style.fontWeight = 'bold';
+                document.getElementById('outputSection').querySelector('h2').textContent = 'Erro na Geração';
+                outputSection.classList.remove('hidden');
+                window.scrollTo({ top: outputSection.offsetTop - 20, behavior: 'smooth' });
+                return;
+            }
+
+            const contractText = generateContractText(data);
+            contractOutput.textContent = contractText;
+            contractOutput.style.color = '';
+            contractOutput.style.fontWeight = '';
+            document.getElementById('outputSection').querySelector('h2').textContent = 'Contrato Gerado com Sucesso!';
+            outputSection.classList.remove('hidden');
+            window.scrollTo({ top: outputSection.offsetTop - 20, behavior: 'smooth' });
+        });
+
+        function getFormData() {
+            const data = {};
+            const fields = [
+                'contractType', 'eventDate', 'eventTime', 'eventDuration', 'eventLocal', 'package', 'value', 'paymentMethod', 'rules',
+                'clientName', 'clientCPF', 'clientRG',
+                'clientAddress', 'clientEmail', 'clientPhone', 'imageRights', 'weddingPackage'
+            ];
+            fields.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                   data[id] = element.type === 'checkbox' ? element.checked : element.value;
+                }
+            });
+            return data;
+        }
+
+        function parseQuickTextData() {
+            const text = document.getElementById('quickText').value;
+            const lines = text.split('\n');
+            const keyMap = {
+                'tipo de contrato': 'contractType',
+                'data do evento': 'eventDate',
+                'hora de início': 'eventTime',
+                'duração (horas)': 'eventDuration',
+                'local do evento': 'eventLocal',
+                'pacote': 'package',
+                'observações / itens adicionais': 'package',
+                'pacote de casamento': 'weddingPackage',
+                'valor do contrato': 'value',
+                'forma de pagamento': 'paymentMethod',
+                'regras adicionais': 'rules',
+                'nome completo': 'clientName',
+                'cpf': 'clientCPF',
+                'rg': 'clientRG',
+                'endereço': 'clientAddress',
+                'email': 'clientEmail',
+                'e-mail': 'clientEmail',
+                'telefone': 'clientPhone',
+                'autoriza uso de imagem': 'imageRights'
+            };
+
+            lines.forEach(line => {
+                const parts = line.split(':');
+                if (parts.length > 1) {
+                    const key = parts[0].trim().toLowerCase();
+                    const value = parts.slice(1).join(':').trim();
+                    if (keyMap[key]) {
+                        const fieldId = keyMap[key];
+                        let finalValue = value;
+                        
+                        const element = document.getElementById(fieldId);
+                        if (!element) return;
+
+                        if (key === 'autoriza uso de imagem') {
+                            finalValue = value.toLowerCase() === 'sim';
+                            element.checked = finalValue;
+                        } else if (key === 'tipo de contrato') {
+                            const type = value.toLowerCase();
+                            if(type.includes('infantil')) finalValue = '1';
+                            else if(type.includes('casamento')) finalValue = '2';
+                            else if(type.includes('geral')) finalValue = '3';
+                            else if(type.includes('dados')) finalValue = '4';
+                            element.value = finalValue;
+                            element.dispatchEvent(new Event('change'));
+                        } else {
+                            element.value = finalValue;
+                        }
+                    }
+                }
+            });
+        }
+
+        function generateContractText(data) {
+            if (data.contractType === '2') {
+                return generateWeddingContract(data);
+            }
+            // Lógica para outros contratos (simplificada)
+            const today = new Date();
+            const city = "Imperatriz";
+            const formattedDate = today.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+            
+            let title = 'CONTRATO DE PRESTAÇÃO DE SERVIÇOS';
+            let objectClause = `O objeto do presente contrato é a prestação de serviços de ${data.package || '[Descrição do Pacote]'}.`;
+            if (data.contractType === '1') title = 'CONTRATO DE PRESTAÇÃO DE SERVIÇOS PARA FESTA INFANTIL';
+            if (data.contractType === '3') title = 'CONTRATO DE PRESTAÇÃO DE SERVIÇOS PARA EVENTOS EM GERAL';
+            if (data.contractType === '4') title = 'CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE ENTRADA DE DADOS';
+
+            return `
+${title}
+
+CONTRATANTE: ${data.clientName || '[Nome do Cliente]'}, CPF/CNPJ nº ${data.clientCPF || '[CPF/CNPJ]'}, residente em ${data.clientAddress || '[Endereço]'}.
+
+CONTRATADO: Wilkson Albuquerque Carvalho, CPF 646.660.003-30.
+
+CLÁUSULA 1ª - DO OBJETO: ${objectClause}
+
+CLÁUSULA 2ª - DO VALOR E PAGAMENTO: O valor é de R$ ${parseFloat(data.value || 0).toFixed(2)}, pago da seguinte forma: ${data.paymentMethod || '[Forma de Pagamento]'}.
+
+${data.rules ? `CLÁUSULA 3ª - REGRAS ADICIONAIS: ${data.rules}` : ''}
+
+${city}, ${formattedDate}.
+
+
+_________________________________________
+${data.clientName || '[Nome do Cliente]'}
+(CONTRATANTE)
+
+_________________________________________
+Wilkson Albuquerque Carvalho
+(CONTRATADO)
+`;
+        }
+
+        function generateWeddingContract(data) {
+            const today = new Date();
+            const city = "Imperatriz";
+            const contractor = {
+                name: "Wilkson Albuquerque Carvalho",
+                cpf: "646.660.003-30",
+                address: "Rua das Araras, 11, Imperatriz - MA",
+                email: "wilkson@gmail.com",
+                phone: "(99) 99111-1456"
+            };
+
+            const eventDateFormatted = data.eventDate ? new Date(data.eventDate).toLocaleDateString('pt-BR', {timeZone: 'UTC'}) : '[Data do Evento]';
+            const startTime = data.eventTime || '[Hora de Início]';
+            let endTime = '[Hora de Término]';
+            if(data.eventTime && data.eventDuration) {
+                const [hours, minutes] = data.eventTime.split(':').map(Number);
+                const startDateTime = new Date();
+                startDateTime.setHours(hours, minutes, 0, 0);
+                startDateTime.setHours(startDateTime.getHours() + Number(data.eventDuration));
+                endTime = startDateTime.toTimeString().substring(0,5);
+            }
+
+            const imageRightsClause = data.imageRights ? 
+                '6.1. O(A) CONTRATANTE autoriza o CONTRATADO a utilizar as fotografias oriundas deste contrato em seu portfólio (físico e online), redes sociais, site, concursos fotográficos e exposições, com o objetivo de divulgar seu trabalho, sem que isso acarrete qualquer ônus.' :
+                '6.1. O(A) CONTRATANTE NÃO AUTORIZA o CONTRATADO a utilizar as fotografias em seu portfólio, redes sociais ou qualquer meio de divulgação.';
+
+            const packageSelection = data.weddingPackage ? `    Pacote Selecionado: ${data.weddingPackage}\n\n` : '';
+            const observations = data.package ? `\n    Observações Adicionais: ${data.package}` : '';
+            
+            let deliverables = '';
+            switch (data.weddingPackage) {
+                case 'AMOR ETERNO (4x de R$ 1.050,00)':
+                    deliverables = `    a) Cobertura especial para Reels por um Story Maker Profissional.
+    b) Álbum 30x30 com estojo em madeira personalizado.
+    c) Pôster 30x45.
+    d) 30 (trinta) fotos do ensaio pré-casamento.
+    e) Todas as fotos do evento em alta resolução.
+    f) Cobertura do making of da noiva.
+    g) Cobertura completa da cerimônia e recepção.
+    h) Pen drive personalizado.`;
+                    break;
+                case 'ALIANÇAS DOURADAS (4x de R$ 925,00)':
+                    deliverables = `    a) Cobertura especial para Reels por um Story Maker Profissional.
+    b) Álbum 20x30 com estojo tradicional.
+    c) 25 (vinte e cinco) fotos do ensaio pré-casamento.
+    d) Todas as fotos do evento em alta resolução.
+    e) Cobertura do making of da noiva.
+    f) Cobertura completa da cerimônia e recepção.
+    g) Pen drive.`;
+                    break;
+                case 'LUA DE MEL (3x de R$ 950,00)':
+                    deliverables = `    a) Cobertura com dois fotógrafos.
+    b) 20 (vinte) fotos do ensaio pré-casamento.
+    c) Todas as fotos do evento em alta resolução.
+    d) Cobertura do making of da noiva.
+    e) Cobertura completa da cerimônia e recepção.
+    f) Pen drive.`;
+                    break;
+                case 'MEMÓRIAS (3x de R$ 800,00)':
+                    deliverables = `    a) Cobertura com dois fotógrafos.
+    b) Todas as fotos do evento em alta resolução.
+    c) Cobertura do making of da noiva.
+    d) Cobertura completa da cerimônia e recepção.`;
+                    break;
+                default:
+                    deliverables = `    a) [Itens a serem entregues não especificados - selecione um pacote].`;
+            }
+
+
+            return `
+CONTRATO DE PRESTAÇÃO DE SERVIÇOS FOTOGRÁFICOS
+
+PARTES
+
+CONTRATANTE: ${data.clientName || '[Nome do Cliente]'}, portador(a) do CPF nº ${data.clientCPF || '[CPF]'} e RG nº ${data.clientRG || '[RG]'}, residente e domiciliado(a) em ${data.clientAddress || '[Endereço]'}, doravante denominado(a) CONTRATANTE.
+
+CONTRATADO: ${contractor.name}, fotógrafo, portador do CPF nº ${contractor.cpf}, com endereço profissional em ${contractor.address}, e-mail: ${contractor.email}, telefone: ${contractor.phone}, doravante denominado CONTRATADO.
+
+As partes acima qualificadas firmam o presente contrato, que se regerá pelas seguintes cláusulas e condições:
+
+CLÁUSULA 1ª – DO OBJETO
+1.1. O presente contrato tem por objeto a prestação de serviços de cobertura fotográfica do casamento do(a) CONTRATANTE, a ser realizado em ${eventDateFormatted}.
+1.2. O serviço contratado compreende:
+    a) Cobertura fotográfica por ${data.eventDuration || '[Nº]'} horas consecutivas.
+    b) Início dos serviços às ${startTime} e término às ${endTime} no local da recepção.
+    c) A cobertura incluirá os seguintes momentos, considerados como protocolo oficial do evento: making of, cerimônia, recepção, fotos oficiais do casal, fotos com os convidados na mesa do bolo e o lançamento do buquê.
+    d) O serviço será realizado por 2 (dois) fotógrafos.
+
+CLÁUSULA 2ª – DO PACOTE E ENTREGA DO MATERIAL
+2.1. O material a ser entregue pelo CONTRATADO ao(à) CONTRATANTE consiste em:
+${packageSelection}${deliverables}${observations}
+2.2. O prazo para entrega da galeria online com as fotos do casamento é de até 90 (noventa) dias úteis, contados a partir do primeiro dia útil após a data do evento.
+2.3. Fica expressamente acordado que os arquivos brutos (formato RAW) não serão entregues em nenhuma hipótese, pois compõem o processo de trabalho e a propriedade intelectual do CONTRATADO.
+
+CLÁUSULA 3ª – DAS OBRIGAÇÕES
+3.1. Compete ao CONTRATADO:
+    a) Prestar o serviço com zelo e profissionalismo, utilizando equipamento profissional adequado.
+    b) Respeitar a data, horários e locais acordados.
+    c) Realizar o backup e armazenamento seguro dos arquivos por um período de 12 (doze) meses após a entrega da galeria online.
+3.2. Compete ao CONTRATANTE:
+    a) Realizar os pagamentos nas datas e valores acordados na Cláusula 4ª.
+    b) Fornecer as condições necessárias para a execução do trabalho, incluindo um local seguro para os equipamentos e alimentação para a equipe do CONTRATADO durante o período da cobertura.
+    c) Informar ao CONTRATADO sobre qualquer momento específico ou pessoa que exija atenção especial durante o evento.
+
+CLÁUSULA 4ª – DO VALOR E FORMA DE PAGAMENTO
+4.1. O valor total deste contrato é de R$ ${parseFloat(data.value || 0).toFixed(2)}.
+4.2. O pagamento será realizado da seguinte forma: ${data.paymentMethod || '[Forma de Pagamento]'}.
+
+CLÁUSULA 5ª – DA REMARCAÇÃO E CANCELAMENTO
+5.1. Remarcação pelo CONTRATANTE: A solicitação de remarcação deve ser feita por escrito com no mínimo 60 dias de antecedência. A nova data estará sujeita à disponibilidade na agenda do CONTRATADO. Uma única remarcação será isenta de taxas, desde que feita no prazo. Demais remarcações ou remarcações fora do prazo estarão sujeitas a uma taxa administrativa de 10% do valor do contrato. Se a nova data for em outro ano, o valor do contrato poderá ser reajustado conforme a tabela de preços vigente.
+5.2. Cancelamento pelo CONTRATANTE (Rescisão): Em caso de rescisão por parte do(a) CONTRATANTE, serão aplicadas as seguintes multas (cláusula penal) sobre o valor total do contrato, a título de perdas e danos, sem prejuízo do sinal já pago, que não é reembolsável:
+    a) Cancelamento com mais de 180 dias de antecedência da data do evento: multa de 20%.
+    b) Cancelamento entre 179 e 90 dias de antecedência: multa de 35%.
+    c) Cancelamento com menos de 89 dias de antecedência: multa de 50%.
+5.3. Impossibilidade do CONTRATADO: Na rara eventualidade de o CONTRATADO não poder comparecer por motivo de força maior, ele se compromete a enviar outro fotógrafo de sua equipe de igual ou superior capacidade técnica, com a aprovação prévia do(a) CONTRATANTE. Caso não seja possível a substituição ou o(a) CONTRATANTE não aprove o substituto, o contrato será rescindido e todos os valores pagos serão devolvidos integralmente, acrescidos de uma multa de 20% do valor do contrato.
+
+CLÁUSULA 6ª – DO DIREITO DE USO DE IMAGEM
+${imageRightsClause}
+
+CLÁUSULA 7ª – DO CASO FORTUITO OU FORÇA MAIOR
+7.1. Nenhuma das partes será responsabilizada pelo não cumprimento de suas obrigações se este for causado por eventos de caso fortuito ou força maior (conforme Art. 393 do Código Civil), tais como desastres naturais, guerras, pandemias ou decretos governamentais que impeçam a realização do evento. Nesses casos, a data do evento será remarcada em comum acordo, sem custos adicionais, no prazo de até 12 meses.
+
+CLÁUSULA 8ª – DO FORO
+8.1. Fica eleito o foro da Comarca de Imperatriz, Estado do Maranhão, para dirimir quaisquer dúvidas ou litígios oriundos do presente contrato, com renúncia expressa a qualquer outro, por mais privilegiado que seja.
+
+E, por estarem justos e contratados, assinam o presente instrumento em 2 (duas) vias de igual teor e forma.
+
+${city}/MA, ${today.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}.
+
+
+_________________________________________
+${data.clientName || '[Nome do Cliente]'}
+CPF: ${data.clientCPF || '[CPF]'}
+
+_________________________________________
+${contractor.name}
+CPF: ${contractor.cpf}
+`;
+        }
+
+        // Lógica dos botões de Ação
+        document.getElementById('copyButton').addEventListener('click', () => {
+            navigator.clipboard.writeText(contractOutput.textContent).then(() => {
+                const msg = document.getElementById('copySuccess');
+                msg.classList.remove('hidden');
+                setTimeout(() => msg.classList.add('hidden'), 3000);
+            });
+        });
+
+        document.getElementById('printButton').addEventListener('click', () => {
+            window.print();
+        });
+
+    </script>
+</body>
+</html>
+
