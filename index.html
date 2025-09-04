@@ -71,6 +71,7 @@
                                         <select id="contractType" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
                                             <option value="" disabled selected>Selecione o tipo...</option>
                                             <option value="1">Festa Infantil</option>
+                                            <option value="6">Formatura Infantil</option>
                                             <option value="2">Casamento</option>
                                             <option value="3">Casamento Civil</option>
                                             <option value="4">Eventos em Geral</option>
@@ -79,7 +80,7 @@
                                     </div>
                                     <div id="eventDetails" class="space-y-4">
                                         <div>
-                                            <label for="eventDate" class="block text-sm font-medium text-gray-700 mb-1">Data do Evento</o>
+                                            <label for="eventDate" class="block text-sm font-medium text-gray-700 mb-1">Data do Evento Principal (Baile/Festa)</o>
                                             <input type="date" id="eventDate" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                         </div>
                                          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -89,11 +90,11 @@
                                             </div>
                                             <div>
                                                 <label for="eventDuration" class="block text-sm font-medium text-gray-700 mb-1">Duração (horas)</label>
-                                                <input type="number" id="eventDuration" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ex: 8">
+                                                <input type="number" id="eventDuration" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ex: 4">
                                             </div>
                                         </div>
                                         <div>
-                                            <label for="eventLocal" class="block text-sm font-medium text-gray-700 mb-1">Local do Evento</label>
+                                            <label for="eventLocal" class="block text-sm font-medium text-gray-700 mb-1">Local do Evento Principal</label>
                                             <input type="text" id="eventLocal" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Salão de Festas X">
                                         </div>
                                     </div>
@@ -108,7 +109,7 @@
                                         </select>
                                     </div>
                                     <div id="infantilPackageSection" class="hidden">
-                                        <label for="infantilPackage" class="block text-sm font-medium text-gray-700 mb-1">Pacote Infantil</label>
+                                        <label for="infantilPackage" class="block text-sm font-medium text-gray-700 mb-1">Pacote Festa Infantil</label>
                                         <select id="infantilPackage" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                             <option value="" disabled selected>Selecione um pacote...</option>
                                             <option value="Diamante (4x de R$ 650,00)">Diamante (4x de R$ 650,00)</option>
@@ -126,9 +127,19 @@
                                             <option value="Super Premium (3x de R$ 800,00)">Super Premium (3x de R$ 800,00)</option>
                                         </select>
                                     </div>
+                                    <div id="formaturaPackageSection" class="hidden">
+                                        <label for="formaturaPackage" class="block text-sm font-medium text-gray-700 mb-1">Pacote Formatura Infantil</label>
+                                        <select id="formaturaPackage" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="" disabled selected>Selecione um pacote...</option>
+                                            <option value="Dei Bambini (4x de R$ 649,00)">Dei Bambini (4x de R$ 649,00)</option>
+                                            <option value="Nana Coc (4x de R$ 499,00)">Nana Coc (4x de R$ 499,00)</option>
+                                            <option value="Lepetit (4x de R$ 499,00)">Lepetit (4x de R$ 499,00)</option>
+                                            <option value="ABC (4x de R$ 299,00)">ABC (4x de R$ 299,00)</option>
+                                        </select>
+                                    </div>
                                      <div>
-                                        <label for="package" class="block text-sm font-medium text-gray-700 mb-1">Pacote Escolhido / Descrição do Serviço</label>
-                                        <textarea id="package" rows="3" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Descreva o serviço ou pacote contratado." required></textarea>
+                                        <label for="package" class="block text-sm font-medium text-gray-700 mb-1">Observações / Itens Adicionais</label>
+                                        <textarea id="package" rows="3" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Descreva o serviço ou adicione itens não inclusos no pacote."></textarea>
                                     </div>
                                 </div>
                             </section>
@@ -139,16 +150,16 @@
                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
                                             <label for="value" class="block text-sm font-medium text-gray-700 mb-1">Valor do Contrato (R$)</label>
-                                            <input type="number" id="value" step="0.01" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="2850.00" required>
+                                            <input type="number" id="value" step="0.01" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="2596.00" required>
                                         </div>
                                         <div>
                                             <label for="paymentMethod" class="block text-sm font-medium text-gray-700 mb-1">Forma de Pagamento</label>
-                                            <input type="text" id="paymentMethod" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ex: 50% de sinal..." required>
+                                            <input type="text" id="paymentMethod" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ex: 4x no cartão..." required>
                                         </div>
                                    </div>
                                      <div>
                                         <label for="rules" class="block text-sm font-medium text-gray-700 mb-1">Regras e Cláusulas Adicionais</label>
-                                        <textarea id="rules" rows="3" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ex: Prazo de entrega do material: 30 dias."></textarea>
+                                        <textarea id="rules" rows="3" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ex: Prazo de entrega do material: 60 dias."></textarea>
                                     </div>
                                 </div>
                             </section>
@@ -156,9 +167,16 @@
 
                         <!-- Coluna Direita: Dados do Contratante -->
                         <section>
-                             <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-green-600">Dados do Contratante (Cliente)</h2>
+                             <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-green-600">Dados do Contratante</h2>
                             <div class="space-y-4">
-                                <input type="text" id="clientName" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" placeholder="Nome Completo" required>
+                                <div>
+                                    <label id="clientNameLabel" for="clientName" class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
+                                    <input type="text" id="clientName" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" placeholder="Nome do Cliente" required>
+                                </div>
+                                <div id="formaturaStudentDetails" class="hidden space-y-4">
+                                    <input type="text" id="studentName" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" placeholder="Nome do Formando(a)">
+                                    <input type="text" id="studentClass" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" placeholder="Turma">
+                                </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <input type="text" id="clientCPF" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" placeholder="CPF" required>
                                     <input type="text" id="clientRG" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" placeholder="RG">
@@ -254,21 +272,30 @@ Autoriza uso de imagem: Sim</textarea>
             const weddingPackageSection = document.getElementById('weddingPackageSection');
             const infantilPackageSection = document.getElementById('infantilPackageSection');
             const civilPackageSection = document.getElementById('civilPackageSection');
+            const formaturaPackageSection = document.getElementById('formaturaPackageSection');
+            const formaturaStudentDetails = document.getElementById('formaturaStudentDetails');
             const packageLabel = document.querySelector('label[for="package"]');
             const packageTextarea = document.getElementById('package');
+            const clientNameLabel = document.getElementById('clientNameLabel');
             
-            // Reset visibility
+            // Reset visibility and labels
             weddingPackageSection.classList.add('hidden');
             infantilPackageSection.classList.add('hidden');
             civilPackageSection.classList.add('hidden');
+            formaturaPackageSection.classList.add('hidden');
+            formaturaStudentDetails.classList.add('hidden');
             eventDetails.classList.remove('hidden');
-            
+            clientNameLabel.textContent = 'Nome Completo';
+            document.getElementById('clientName').placeholder = 'Nome do Cliente';
+            document.querySelector('label[for="eventDate"]').textContent = 'Data do Evento';
+
+
             packageLabel.textContent = 'Pacote Escolhido / Descrição do Serviço';
             packageTextarea.placeholder = 'Descreva o serviço ou pacote contratado.';
             packageTextarea.required = true;
 
             switch(e.target.value) {
-                case '1': // Infantil
+                case '1': // Festa Infantil
                     infantilPackageSection.classList.remove('hidden');
                     packageLabel.textContent = 'Observações / Itens Adicionais';
                     packageTextarea.placeholder = 'Adicione itens não inclusos no pacote padrão ou outras observações.';
@@ -288,6 +315,16 @@ Autoriza uso de imagem: Sim</textarea>
                     break;
                 case '5': // Entrada de Dados
                     eventDetails.classList.add('hidden');
+                    break;
+                case '6': // Formatura Infantil
+                    formaturaPackageSection.classList.remove('hidden');
+                    formaturaStudentDetails.classList.remove('hidden');
+                    clientNameLabel.textContent = 'Nome do Pai ou Mãe (Responsável)';
+                    document.getElementById('clientName').placeholder = 'Nome do Pai ou Mãe';
+                    packageLabel.textContent = 'Observações / Itens Adicionais';
+                    packageTextarea.placeholder = 'Adicione itens não inclusos no pacote padrão ou outras observações.';
+                    packageTextarea.required = false;
+                    document.querySelector('label[for="eventDate"]').textContent = 'Data do Evento Principal (Baile)';
                     break;
             }
         });
@@ -357,6 +394,30 @@ Autoriza uso de imagem: Sim</textarea>
             }
             valueInput.value = totalValue;
         });
+        
+         // Preencher valor do contrato ao selecionar pacote de formatura infantil
+        document.getElementById('formaturaPackage').addEventListener('change', (e) => {
+            const packageValue = e.target.value;
+            const valueInput = document.getElementById('value');
+            let totalValue = '';
+
+            switch (packageValue) {
+                case 'Dei Bambini (4x de R$ 649,00)':
+                    totalValue = '2596.00';
+                    break;
+                case 'Nana Coc (4x de R$ 499,00)':
+                    totalValue = '1996.00';
+                    break;
+                case 'Lepetit (4x de R$ 499,00)':
+                    totalValue = '1996.00';
+                    break;
+                case 'ABC (4x de R$ 299,00)':
+                    totalValue = '1196.00';
+                    break;
+            }
+            valueInput.value = totalValue;
+        });
+
 
         // Lógica de submissão do formulário
         generateButton.addEventListener('click', () => {
@@ -364,36 +425,20 @@ Autoriza uso de imagem: Sim</textarea>
                 parseQuickTextData(); // Popula o formulário a partir do texto rápido
             }
             
-            // Validação manual simples para campos visíveis
-            if (activeTab === 'form' && !contractForm.checkValidity()) {
-                contractOutput.textContent = 'ERRO: Por favor, preencha todos os campos obrigatórios (*) no formulário detalhado.';
-                contractOutput.style.color = 'red';
-                contractOutput.style.fontWeight = 'bold';
-                document.getElementById('outputSection').querySelector('h2').textContent = 'Erro na Validação';
-                outputSection.classList.remove('hidden');
-                window.scrollTo({ top: outputSection.offsetTop - 20, behavior: 'smooth' });
-                 // Força o navegador a mostrar quais campos são inválidos
+            if (!contractForm.checkValidity()) {
                 contractForm.reportValidity();
                 return;
             }
 
-            const data = getFormData(); // Sempre obtém os dados do formulário visual
+            const data = getFormData();
 
             if (!data.contractType) {
-                contractOutput.textContent = 'ERRO: O "Tipo de Contrato" é um campo obrigatório. Por favor, selecione uma opção para continuar.';
-                contractOutput.style.color = 'red';
-                contractOutput.style.fontWeight = 'bold';
-                document.getElementById('outputSection').querySelector('h2').textContent = 'Erro na Geração';
-                outputSection.classList.remove('hidden');
-                window.scrollTo({ top: outputSection.offsetTop - 20, behavior: 'smooth' });
+                alert('Por favor, selecione um Tipo de Contrato.');
                 return;
             }
 
             const contractText = generateContractText(data);
             contractOutput.textContent = contractText;
-            contractOutput.style.color = '';
-            contractOutput.style.fontWeight = '';
-            document.getElementById('outputSection').querySelector('h2').textContent = 'Contrato Gerado com Sucesso!';
             outputSection.classList.remove('hidden');
             window.scrollTo({ top: outputSection.offsetTop - 20, behavior: 'smooth' });
         });
@@ -404,7 +449,8 @@ Autoriza uso de imagem: Sim</textarea>
                 'contractType', 'eventDate', 'eventTime', 'eventDuration', 'eventLocal', 'package', 'value', 'paymentMethod', 'rules',
                 'clientName', 'clientCPF', 'clientRG',
                 'clientAddress', 'clientEmail', 'clientPhone', 'imageRights', 
-                'weddingPackage', 'infantilPackage', 'civilPackage'
+                'weddingPackage', 'infantilPackage', 'civilPackage', 'formaturaPackage',
+                'studentName', 'studentClass'
             ];
             fields.forEach(id => {
                 const element = document.getElementById(id);
@@ -429,17 +475,21 @@ Autoriza uso de imagem: Sim</textarea>
                 'pacote de casamento': 'weddingPackage',
                 'pacote infantil': 'infantilPackage',
                 'pacote casamento civil': 'civilPackage',
+                'pacote formatura infantil': 'formaturaPackage',
                 'valor do contrato': 'value',
                 'forma de pagamento': 'paymentMethod',
                 'regras adicionais': 'rules',
                 'nome completo': 'clientName',
+                'nome do pai ou mãe': 'clientName',
                 'cpf': 'clientCPF',
                 'rg': 'clientRG',
                 'endereço': 'clientAddress',
                 'email': 'clientEmail',
                 'e-mail': 'clientEmail',
                 'telefone': 'clientPhone',
-                'autoriza uso de imagem': 'imageRights'
+                'autoriza uso de imagem': 'imageRights',
+                'nome do formando(a)': 'studentName',
+                'turma': 'studentClass'
             };
 
             lines.forEach(line => {
@@ -459,7 +509,8 @@ Autoriza uso de imagem: Sim</textarea>
                             element.checked = finalValue;
                         } else if (key === 'tipo de contrato') {
                             const type = value.toLowerCase();
-                            if(type.includes('infantil')) finalValue = '1';
+                            if(type.includes('festa infantil')) finalValue = '1';
+                            else if(type.includes('formatura infantil')) finalValue = '6';
                             else if(type.includes('casamento civil')) finalValue = '3';
                             else if(type.includes('casamento')) finalValue = '2';
                             else if(type.includes('geral')) finalValue = '4';
@@ -475,15 +526,11 @@ Autoriza uso de imagem: Sim</textarea>
         }
 
         function generateContractText(data) {
-            if (data.contractType === '1') {
-                return generateInfantilContract(data);
-            }
-            if (data.contractType === '2') {
-                return generateWeddingContract(data);
-            }
-            if (data.contractType === '3') {
-                return generateCivilContract(data);
-            }
+            if (data.contractType === '1') return generateInfantilContract(data);
+            if (data.contractType === '2') return generateWeddingContract(data);
+            if (data.contractType === '3') return generateCivilContract(data);
+            if (data.contractType === '6') return generateFormaturaContract(data);
+            
             // Lógica para outros contratos (simplificada)
             const today = new Date();
             const city = "Imperatriz";
@@ -517,6 +564,106 @@ ${data.clientName || '[Nome do Cliente]'}
 _________________________________________
 Wilkson Albuquerque Carvalho
 (CONTRATADO)
+`;
+        }
+
+        function generateFormaturaContract(data) {
+            const today = new Date();
+            const city = "Imperatriz";
+            const contractor = {
+                name: "Wilkson Albuquerque Carvalho",
+                cpf: "646.660.003-30",
+                address: "Rua das Araras, 11, Imperatriz - MA",
+                email: "wilkson@gmail.com",
+                phone: "(99) 99111-1456"
+            };
+
+            const imageRightsClause = data.imageRights ? 
+                '6.1. O(A) CONTRATANTE autoriza o CONTRATADO a utilizar as fotografias oriundas deste contrato em seu portfólio (físico e online), redes sociais, site, concursos fotográficos e exposições, com o objetivo de divulgar seu trabalho, sem que isso acarrete qualquer ônus.' :
+                '6.1. O(A) CONTRATANTE NÃO AUTORIZA o CONTRATADO a utilizar as fotografias em seu portfólio, redes sociais ou qualquer meio de divulgação.';
+
+            const packageSelection = data.formaturaPackage ? `    Pacote Selecionado: ${data.formaturaPackage}\n\n` : '';
+            const observations = data.package ? `\n    Observações Adicionais: ${data.package}` : '';
+            
+            let deliverables = '';
+            switch (data.formaturaPackage) {
+                case 'Dei Bambini (4x de R$ 649,00)':
+                    deliverables = `    a) Álbum 20x30 com 28 páginas e estojo em madeira personalizado.
+    b) 80 (oitenta) fotos editadas.
+    c) Pen drive personalizado.
+    d) Vídeo geral do baile (brinde).`;
+                    break;
+                case 'Nana Coc (4x de R$ 499,00)':
+                    deliverables = `    a) Álbum 20x30 com 24 páginas e estojo tradicional.
+    b) 70 (setenta) fotos editadas.
+    c) Pen drive.
+    d) Vídeo geral do baile (brinde).`;
+                    break;
+                case 'Lepetit (4x de R$ 499,00)':
+                     deliverables = `    a) Álbum 20x30 com 20 páginas e estojo tradicional.
+    b) 60 (sessenta) fotos editadas.
+    c) Pen drive.
+    d) Vídeo geral do baile (brinde).`;
+                    break;
+                case 'ABC (4x de R$ 299,00)':
+                    deliverables = `    a) 50 (cinquenta) fotos editadas.
+    b) Vídeo geral do baile (brinde).
+    c) Fotos entregues via galeria online.`;
+                    break;
+                default:
+                    deliverables = `    a) [Itens a serem entregues não especificados - selecione um pacote].`;
+            }
+
+             return `
+CONTRATO DE PRESTAÇÃO DE SERVIÇOS FOTOGRÁFICOS – FORMATURA INFANTIL
+
+PARTES
+
+CONTRATANTE: ${data.clientName || '[Nome do Pai ou Mãe]'}, portador(a) do CPF nº ${data.clientCPF || '[CPF]'} e RG nº ${data.clientRG || '[RG]'}, residente e domiciliado(a) em ${data.clientAddress || '[Endereço]'}, responsável legal pelo(a) formando(a) ${data.studentName || '[Nome do Formando(a)]'}, doravante denominado(a) CONTRATANTE.
+
+CONTRATADO: ${contractor.name}, fotógrafo, portador do CPF nº ${contractor.cpf}, com endereço profissional em ${contractor.address}, e-mail: ${contractor.email}, telefone: ${contractor.phone}, doravante denominado CONTRATADO.
+
+As partes acima qualificadas firmam o presente contrato, que se regerá pelas seguintes cláusulas e condições:
+
+CLÁUSULA 1ª – DO OBJETO
+1.1. O presente contrato tem por objeto a prestação de serviços de cobertura fotográfica dos eventos relacionados à formatura infantil do(a) aluno(a) ${data.studentName || '[Nome do Formando(a)]'}, da turma ${data.studentClass || '[Turma]'}.
+1.2. O serviço contratado compreende a cobertura dos seguintes eventos: Aula da Saudade, Noite do Pijama, Fotos para Convite e o Baile de Formatura.
+
+CLÁUSULA 2ª – DO PACOTE E ENTREGA DO MATERIAL
+2.1. O material a ser entregue pelo CONTRATADO ao(à) CONTRATANTE consiste em:
+${packageSelection}${deliverables}${observations}
+2.2. O prazo para entrega do material digital é de até 60 (sessenta) dias úteis, contados a partir da data do último evento (Baile de Formatura).
+2.3. Fica expressamente acordado que os arquivos brutos (formato RAW) não serão entregues em nenhuma hipótese.
+
+CLÁUSULA 3ª – DAS OBRIGAÇÕES
+3.1. Compete ao CONTRATADO: prestar o serviço com zelo, respeitar os horários e locais definidos pela comissão de formatura/escola e realizar o backup seguro dos arquivos por um período de 12 (doze) meses.
+3.2. Compete ao CONTRATANTE: realizar os pagamentos nas datas e valores acordados e zelar para que o(a) formando(a) compareça aos eventos programados para a cobertura fotográfica.
+
+CLÁUSULA 4ª – DO VALOR E FORMA DE PAGAMENTO
+4.1. O valor total deste contrato é de R$ ${parseFloat(data.value || 0).toFixed(2)}.
+4.2. O pagamento será realizado da seguinte forma: ${data.paymentMethod || '[Forma de Pagamento]'}.
+
+CLÁUSULA 5ª – DO CANCELAMENTO
+5.1. Em caso de rescisão por parte do(a) CONTRATANTE, será retido o valor equivalente a 30% do total do contrato a título de multa e despesas administrativas. Valores já pagos que excedam a multa serão devolvidos.
+
+CLÁUSULA 6ª – DO DIREITO DE USO DE IMAGEM
+${imageRightsClause}
+
+CLÁUSULA 7ª – DO FORO
+7.1. Fica eleito o foro da Comarca de Imperatriz, Estado do Maranhão, para dirimir quaisquer dúvidas oriundas do presente contrato.
+
+E, por estarem justos e contratados, assinam o presente instrumento em 2 (duas) vias de igual teor e forma.
+
+${city}/MA, ${today.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}.
+
+
+_________________________________________
+${data.clientName || '[Nome do Responsável]'}
+CPF: ${data.clientCPF || '[CPF]'}
+
+_________________________________________
+${contractor.name}
+CPF: ${contractor.cpf}
 `;
         }
         
