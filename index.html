@@ -195,7 +195,7 @@
                                         <select id="formaturaPackage" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                             <option value="" disabled selected>Selecione um pacote...</option>
                                             <option value="Dei Bambini (4x de R$ 649,00)">Dei Bambini (4x de R$ 649,00)</option>
-                                            <option value="Nana Coc (4x de R$ 499,00)">Nana Coc (4x de R$ 499,00)</option>
+                                            <option value="Nana Coc (4x de R$ 599,00)">Nana Coc (4x de R$ 599,00)</option>
                                             <option value="Lepetit (4x de R$ 499,00)">Lepetit (4x de R$ 499,00)</option>
                                             <option value="ABC (4x de R$ 299,00)">ABC (4x de R$ 299,00)</option>
                                         </select>
@@ -361,10 +361,7 @@ Telefone:
 Data do Evento: 
 Hora de Início: 
 Local do Evento: 
-Pacote Festa Infantil: 
-Duração (horas): 4
-Forma de Pagamento: 
-Autoriza uso de imagem: Sim`;
+Pacote Festa Infantil:`;
                     break;
                 case '2': // Casamento
                     weddingPackageSection.classList.remove('hidden');
@@ -525,8 +522,8 @@ Autoriza uso de imagem: Sim`;
                 case 'Dei Bambini (4x de R$ 649,00)':
                     totalValue = '2596.00';
                     break;
-                case 'Nana Coc (4x de R$ 499,00)':
-                    totalValue = '1996.00';
+                case 'Nana Coc (4x de R$ 599,00)':
+                    totalValue = '2396.00';
                     break;
                 case 'Lepetit (4x de R$ 499,00)':
                     totalValue = '1996.00';
@@ -649,7 +646,11 @@ Autoriza uso de imagem: Sim`;
                 document.getElementById('eventDuration').value = '08';
                 document.getElementById('paymentMethod').value = 'Entrada e o restante dividido.';
                 document.getElementById('imageRights').checked = true;
-            } else {
+            } else if (typeValue.includes('festa infantil')) {
+                const infantilKeys = [null, 'clientName', 'clientCPF', 'clientAddress', 'clientEmail', 'clientPhone', 'eventDate', 'eventTime', 'eventLocal', 'infantilPackage'];
+                 parseByLine(lines, infantilKeys);
+            }
+            else {
                 const keyMap = {'data do evento': 'eventDate','hora de início': 'eventTime','duração (horas)': 'eventDuration','local do evento': 'eventLocal','descrição do serviço': 'package','observações / itens adicionais': 'package','pacote de casamento': 'weddingPackage','pacote festa infantil': 'infantilPackage','pacote casamento civil': 'civilPackage','valor do contrato': 'value','forma de pagamento': 'paymentMethod','regras adicionais': 'rules','nome completo': 'clientName','cpf': 'clientCPF','rg': 'clientRG','endereço': 'clientAddress','email': 'clientEmail','e-mail': 'clientEmail','telefone': 'clientPhone','autoriza uso de imagem': 'imageRights'};
                  lines.forEach(line => {
                     const parts = line.split(':');
@@ -756,7 +757,7 @@ Autoriza uso de imagem: Sim`;
                 case 'Dei Bambini (4x de R$ 649,00)':
                     deliverables = `<p>a) Álbum 20x30 com 28 páginas e estojo em madeira personalizado.<br>b) 80 (oitenta) fotos editadas.<br>c) Pen drive personalizado.<br>d) Vídeo geral do baile (brinde).</p>`;
                     break;
-                case 'Nana Coc (4x de R$ 499,00)':
+                case 'Nana Coc (4x de R$ 599,00)':
                     deliverables = `<p>a) Álbum 20x30 com 24 páginas e estojo tradicional.<br>b) 70 (setenta) fotos editadas.<br>c) Pen drive.<br>d) Vídeo geral do baile (brinde).</p>`;
                     break;
                 case 'Lepetit (4x de R$ 499,00)':
