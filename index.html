@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Contratos de Prestação de Serviços</title>
+    <title>Gerador de Contratos de Prestação de Serviços - V03</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -379,8 +379,7 @@ Data do Evento:
 Hora de Início: 
 Local do Evento: 
 Pacote de Casamento: 
-Duração (horas): 08 horas
-Forma de Pagamento: Entrada e o restante dividido.
+Forma de Pagamento: 
 Autoriza uso de imagem: Sim`;
                     break;
                 case '3': // Casamento Civil
@@ -558,13 +557,13 @@ Autoriza uso de imagem: Sim`;
             const data = getFormData();
 
             if (!data.contractType) {
-                outputSection.classList.remove('hidden');
+                 outputSection.classList.remove('hidden');
                 contractOutput.innerHTML = `<h1>Erro na Geração</h1><p style="text-align: center; color: red;">O "Tipo de Contrato" é um campo obrigatório. Por favor, selecione uma opção para continuar.</p>`;
                 return;
             }
 
-            const contractText = generateContractText(data);
-            contractOutput.innerHTML = contractText;
+            const contractHTML = generateContractText(data);
+            contractOutput.innerHTML = contractHTML;
             outputSection.classList.remove('hidden');
             window.scrollTo({ top: outputSection.offsetTop - 20, behavior: 'smooth' });
         });
@@ -586,73 +585,95 @@ Autoriza uso de imagem: Sim`;
             });
             return data;
         }
-
-        function parseQuickTextData() {
-            const text = document.getElementById('quickText').value;
-            const lines = text.split('\n');
-            const keyMap = {
-                'tipo de contrato': 'contractType',
-                'data do evento': 'eventDate',
-                'hora de início': 'eventTime',
-                'duração (horas)': 'eventDuration',
-                'local do evento': 'eventLocal',
-                'descrição do serviço': 'package',
-                'observações / itens adicionais': 'package',
-                'pacote de casamento': 'weddingPackage',
-                'pacote festa infantil': 'infantilPackage',
-                'pacote casamento civil': 'civilPackage',
-                'pacote formatura infantil': 'formaturaPackage',
-                'valor do contrato': 'value',
-                'forma de pagamento': 'paymentMethod',
-                'regras adicionais': 'rules',
-                'nome completo': 'clientName',
-                'nome do pai ou mãe': 'clientName',
-                'cpf': 'clientCPF',
-                'rg': 'clientRG',
-                'endereço': 'clientAddress',
-                'email': 'clientEmail',
-                'e-mail': 'clientEmail',
-                'telefone': 'clientPhone',
-                'autoriza uso de imagem': 'imageRights',
-                'nome do formando(a)': 'studentName',
-                'turma': 'studentClass'
-            };
-
-            lines.forEach(line => {
-                const parts = line.split(':');
-                if (parts.length > 1) {
-                    const key = parts[0].trim().toLowerCase();
-                    const value = parts.slice(1).join(':').trim();
-                    if (keyMap[key]) {
-                        const fieldId = keyMap[key];
-                        let finalValue = value;
-                        
-                        const element = document.getElementById(fieldId);
-                        if (!element) return;
-
-                        if (key === 'autoriza uso de imagem') {
-                            finalValue = value.toLowerCase() === 'sim';
-                            element.checked = finalValue;
-                        } else if (key === 'tipo de contrato') {
-                            const type = value.toLowerCase();
-                            if(type.includes('festa infantil')) finalValue = '1';
-                            else if(type.includes('formatura infantil')) finalValue = '6';
-                            else if(type.includes('casamento civil')) finalValue = '3';
-                            else if(type.includes('casamento')) finalValue = '2';
-                            else if(type.includes('geral')) finalValue = '4';
-                            else if(type.includes('dados')) finalValue = '5';
-                            element.value = finalValue;
-                            element.dispatchEvent(new Event('change'));
-                        } else {
-                            element.value = finalValue;
-                            // Disparar evento de change para os selects de pacote para atualizar o valor
-                            if (fieldId.includes('Package')) {
+        
+        function parseByLine(lines, keys) {
+            lines.forEach((line, index) => {
+                if (keys[index]) {
+                    const value = line.split(':').slice(1).join(':').trim();
+                    const element = document.getElementById(keys[index]);
+                    if (element) {
+                        if (keys[index] === 'eventDate' && value) {
+                            const parts = value.split('/');
+                            if (parts.length === 3) {
+                                let [day, month, year] = parts;
+                                if (year.length === 2) {
+                                    year = parseInt(year) > 50 ? `19${year}` : `20${year}`;
+                                }
+                                day = day.padStart(2, '0');
+                                month = month.padStart(2, '0');
+                                element.value = `${year}-${month}-${day}`;
+                            } else {
+                               element.value = value;
+                            }
+                        } else if (element.type === 'checkbox') {
+                            element.checked = value.toLowerCase() === 'sim';
+                        } else if (element.tagName === 'SELECT') {
+                            const optionToSelect = [...element.options].find(opt => opt.text.toLowerCase().startsWith(value.toLowerCase()));
+                            if (optionToSelect) {
+                                element.value = optionToSelect.value;
                                 element.dispatchEvent(new Event('change'));
                             }
+                        } else {
+                            element.value = value;
                         }
                     }
                 }
             });
+        }
+
+        function parseQuickTextData() {
+            const text = document.getElementById('quickText').value;
+            const lines = text.split('\n');
+            const typeLine = lines[0] || '';
+            if (!typeLine.includes(':')) return;
+            const typeValue = typeLine.split(':').slice(1).join(':').trim().toLowerCase();
+            const contractTypeElement = document.getElementById('contractType');
+            
+            let contractTypeValue = '';
+            if (typeValue.includes('festa infantil')) contractTypeValue = '1';
+            else if (typeValue.includes('formatura infantil')) contractTypeValue = '6';
+            else if (typeValue.includes('casamento civil')) contractTypeValue = '3';
+            else if (typeValue.includes('casamento')) contractTypeValue = '2';
+            else if (typeValue.includes('geral')) contractTypeValue = '4';
+            else if (typeValue.includes('dados')) contractTypeValue = '5';
+            
+            if (contractTypeValue) {
+                contractTypeElement.value = contractTypeValue;
+                contractTypeElement.dispatchEvent(new Event('change'));
+            }
+
+            if (typeValue.includes('formatura infantil')) {
+                const formaturaKeys = [null, 'clientName', 'clientCPF', 'clientEmail', 'clientPhone', 'studentName', 'studentClass', 'clientAddress', 'formaturaPackage', 'paymentMethod', 'imageRights'];
+                parseByLine(lines, formaturaKeys);
+            } else if (typeValue.includes('casamento') && !typeValue.includes('civil')) {
+                const casamentoKeys = [null, 'clientName', 'clientCPF', 'clientAddress', 'clientEmail', 'clientPhone', 'eventDate', 'eventTime', 'eventLocal', 'weddingPackage', 'paymentMethod', 'imageRights'];
+                parseByLine(lines, casamentoKeys);
+                document.getElementById('eventDuration').value = '08';
+                document.getElementById('paymentMethod').value = 'Entrada e o restante dividido.';
+                document.getElementById('imageRights').checked = true;
+            } else {
+                const keyMap = {'data do evento': 'eventDate','hora de início': 'eventTime','duração (horas)': 'eventDuration','local do evento': 'eventLocal','descrição do serviço': 'package','observações / itens adicionais': 'package','pacote de casamento': 'weddingPackage','pacote festa infantil': 'infantilPackage','pacote casamento civil': 'civilPackage','valor do contrato': 'value','forma de pagamento': 'paymentMethod','regras adicionais': 'rules','nome completo': 'clientName','cpf': 'clientCPF','rg': 'clientRG','endereço': 'clientAddress','email': 'clientEmail','e-mail': 'clientEmail','telefone': 'clientPhone','autoriza uso de imagem': 'imageRights'};
+                 lines.forEach(line => {
+                    const parts = line.split(':');
+                    if (parts.length > 1) {
+                        const key = parts[0].trim().toLowerCase();
+                        const value = parts.slice(1).join(':').trim();
+                        if (keyMap[key]) {
+                            const fieldId = keyMap[key];
+                            const element = document.getElementById(fieldId);
+                            if (!element) return;
+                            if (key === 'autoriza uso de imagem') {
+                                element.checked = value.toLowerCase() === 'sim';
+                            } else {
+                                element.value = value;
+                                if (fieldId.includes('Package')) {
+                                    element.dispatchEvent(new Event('change'));
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         }
         
         function createSignature(name, doc) {
@@ -669,7 +690,6 @@ Autoriza uso de imagem: Sim`;
             if (data.contractType === '3') return generateCivilContract(data);
             if (data.contractType === '6') return generateFormaturaContract(data);
             
-            // Lógica para outros contratos
             return generateGenericContract(data);
         }
 
