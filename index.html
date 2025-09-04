@@ -143,7 +143,7 @@
                                     </div>
                                     <div id="eventDetails" class="space-y-4">
                                         <div>
-                                            <label for="eventDate" class="block text-sm font-medium text-gray-700 mb-1">Data do Evento Principal (Baile/Festa)</o>
+                                            <label for="eventDate" class="block text-sm font-medium text-gray-700 mb-1">Data do Evento</label>
                                             <input type="date" id="eventDate" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                         </div>
                                          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -157,7 +157,7 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <label for="eventLocal" class="block text-sm font-medium text-gray-700 mb-1">Local do Evento Principal</label>
+                                            <label for="eventLocal" class="block text-sm font-medium text-gray-700 mb-1">Local do Evento</label>
                                             <input type="text" id="eventLocal" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Salão de Festas X">
                                         </div>
                                     </div>
@@ -378,9 +378,7 @@ Telefone:
 Data do Evento: 
 Hora de Início: 
 Local do Evento: 
-Pacote de Casamento: 
-Forma de Pagamento: 
-Autoriza uso de imagem: Sim`;
+Pacote de Casamento:`;
                     break;
                 case '3': // Casamento Civil
                     civilPackageSection.classList.remove('hidden');
@@ -646,7 +644,7 @@ Autoriza uso de imagem: Sim`;
                 const formaturaKeys = [null, 'clientName', 'clientCPF', 'clientEmail', 'clientPhone', 'studentName', 'studentClass', 'clientAddress', 'formaturaPackage', 'paymentMethod', 'imageRights'];
                 parseByLine(lines, formaturaKeys);
             } else if (typeValue.includes('casamento') && !typeValue.includes('civil')) {
-                const casamentoKeys = [null, 'clientName', 'clientCPF', 'clientAddress', 'clientEmail', 'clientPhone', 'eventDate', 'eventTime', 'eventLocal', 'weddingPackage', 'paymentMethod', 'imageRights'];
+                const casamentoKeys = [null, 'clientName', 'clientCPF', 'clientAddress', 'clientEmail', 'clientPhone', 'eventDate', 'eventTime', 'eventLocal', 'weddingPackage'];
                 parseByLine(lines, casamentoKeys);
                 document.getElementById('eventDuration').value = '08';
                 document.getElementById('paymentMethod').value = 'Entrada e o restante dividido.';
