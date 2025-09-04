@@ -72,8 +72,9 @@
                                             <option value="" disabled selected>Selecione o tipo...</option>
                                             <option value="1">Festa Infantil</option>
                                             <option value="2">Casamento</option>
-                                            <option value="3">Eventos em Geral</option>
-                                            <option value="4">Entrada de Dados</option>
+                                            <option value="3">Casamento Civil</option>
+                                            <option value="4">Eventos em Geral</option>
+                                            <option value="5">Entrada de Dados</option>
                                         </select>
                                     </div>
                                     <div id="eventDetails" class="space-y-4">
@@ -114,6 +115,15 @@
                                             <option value="Ouro (3x de R$ 600,00)">Ouro (3x de R$ 600,00)</option>
                                             <option value="Prata (2x de R$ 600,00)">Prata (2x de R$ 600,00)</option>
                                             <option value="Bronze (2x de R$ 550,00)">Bronze (2x de R$ 550,00)</option>
+                                        </select>
+                                    </div>
+                                    <div id="civilPackageSection" class="hidden">
+                                        <label for="civilPackage" class="block text-sm font-medium text-gray-700 mb-1">Pacote Casamento Civil</label>
+                                        <select id="civilPackage" class="w-full form-input p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="" disabled selected>Selecione um pacote...</option>
+                                            <option value="Tradicional (2x de R$ 600,00)">Tradicional (2x de R$ 600,00)</option>
+                                            <option value="Premium (2x de R$ 750,00)">Premium (2x de R$ 750,00)</option>
+                                            <option value="Super Premium (3x de R$ 800,00)">Super Premium (3x de R$ 800,00)</option>
                                         </select>
                                     </div>
                                      <div>
@@ -243,12 +253,14 @@ Autoriza uso de imagem: Sim</textarea>
             const eventDetails = document.getElementById('eventDetails');
             const weddingPackageSection = document.getElementById('weddingPackageSection');
             const infantilPackageSection = document.getElementById('infantilPackageSection');
+            const civilPackageSection = document.getElementById('civilPackageSection');
             const packageLabel = document.querySelector('label[for="package"]');
             const packageTextarea = document.getElementById('package');
             
             // Reset visibility
             weddingPackageSection.classList.add('hidden');
             infantilPackageSection.classList.add('hidden');
+            civilPackageSection.classList.add('hidden');
             eventDetails.classList.remove('hidden');
             
             packageLabel.textContent = 'Pacote Escolhido / Descrição do Serviço';
@@ -268,7 +280,13 @@ Autoriza uso de imagem: Sim</textarea>
                     packageTextarea.placeholder = 'Adicione itens não inclusos no pacote padrão ou outras observações.';
                     packageTextarea.required = false;
                     break;
-                case '4': // Entrada de Dados
+                case '3': // Casamento Civil
+                    civilPackageSection.classList.remove('hidden');
+                    packageLabel.textContent = 'Observações / Itens Adicionais';
+                    packageTextarea.placeholder = 'Adicione itens não inclusos no pacote padrão ou outras observações.';
+                    packageTextarea.required = false;
+                    break;
+                case '5': // Entrada de Dados
                     eventDetails.classList.add('hidden');
                     break;
             }
@@ -319,6 +337,26 @@ Autoriza uso de imagem: Sim</textarea>
             }
             valueInput.value = totalValue;
         });
+        
+        // Preencher valor do contrato ao selecionar pacote de casamento civil
+        document.getElementById('civilPackage').addEventListener('change', (e) => {
+            const packageValue = e.target.value;
+            const valueInput = document.getElementById('value');
+            let totalValue = '';
+
+            switch (packageValue) {
+                case 'Tradicional (2x de R$ 600,00)':
+                    totalValue = '1200.00';
+                    break;
+                case 'Premium (2x de R$ 750,00)':
+                    totalValue = '1500.00';
+                    break;
+                case 'Super Premium (3x de R$ 800,00)':
+                    totalValue = '2400.00';
+                    break;
+            }
+            valueInput.value = totalValue;
+        });
 
         // Lógica de submissão do formulário
         generateButton.addEventListener('click', () => {
@@ -365,7 +403,8 @@ Autoriza uso de imagem: Sim</textarea>
             const fields = [
                 'contractType', 'eventDate', 'eventTime', 'eventDuration', 'eventLocal', 'package', 'value', 'paymentMethod', 'rules',
                 'clientName', 'clientCPF', 'clientRG',
-                'clientAddress', 'clientEmail', 'clientPhone', 'imageRights', 'weddingPackage', 'infantilPackage'
+                'clientAddress', 'clientEmail', 'clientPhone', 'imageRights', 
+                'weddingPackage', 'infantilPackage', 'civilPackage'
             ];
             fields.forEach(id => {
                 const element = document.getElementById(id);
@@ -389,6 +428,7 @@ Autoriza uso de imagem: Sim</textarea>
                 'observações / itens adicionais': 'package',
                 'pacote de casamento': 'weddingPackage',
                 'pacote infantil': 'infantilPackage',
+                'pacote casamento civil': 'civilPackage',
                 'valor do contrato': 'value',
                 'forma de pagamento': 'paymentMethod',
                 'regras adicionais': 'rules',
@@ -420,9 +460,10 @@ Autoriza uso de imagem: Sim</textarea>
                         } else if (key === 'tipo de contrato') {
                             const type = value.toLowerCase();
                             if(type.includes('infantil')) finalValue = '1';
+                            else if(type.includes('casamento civil')) finalValue = '3';
                             else if(type.includes('casamento')) finalValue = '2';
-                            else if(type.includes('geral')) finalValue = '3';
-                            else if(type.includes('dados')) finalValue = '4';
+                            else if(type.includes('geral')) finalValue = '4';
+                            else if(type.includes('dados')) finalValue = '5';
                             element.value = finalValue;
                             element.dispatchEvent(new Event('change'));
                         } else {
@@ -440,6 +481,9 @@ Autoriza uso de imagem: Sim</textarea>
             if (data.contractType === '2') {
                 return generateWeddingContract(data);
             }
+            if (data.contractType === '3') {
+                return generateCivilContract(data);
+            }
             // Lógica para outros contratos (simplificada)
             const today = new Date();
             const city = "Imperatriz";
@@ -447,8 +491,8 @@ Autoriza uso de imagem: Sim</textarea>
             
             let title = 'CONTRATO DE PRESTAÇÃO DE SERVIÇOS';
             let objectClause = `O objeto do presente contrato é a prestação de serviços de ${data.package || '[Descrição do Pacote]'}.`;
-             if (data.contractType === '3') title = 'CONTRATO DE PRESTAÇÃO DE SERVIÇOS PARA EVENTOS EM GERAL';
-            if (data.contractType === '4') title = 'CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE ENTRADA DE DADOS';
+             if (data.contractType === '4') title = 'CONTRATO DE PRESTAÇÃO DE SERVIÇOS PARA EVENTOS EM GERAL';
+            if (data.contractType === '5') title = 'CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE ENTRADA DE DADOS';
 
             return `
 ${title}
@@ -473,6 +517,105 @@ ${data.clientName || '[Nome do Cliente]'}
 _________________________________________
 Wilkson Albuquerque Carvalho
 (CONTRATADO)
+`;
+        }
+        
+        function generateCivilContract(data) {
+            const today = new Date();
+            const city = "Imperatriz";
+            const contractor = {
+                name: "Wilkson Albuquerque Carvalho",
+                cpf: "646.660.003-30",
+                address: "Rua das Araras, 11, Imperatriz - MA",
+                email: "wilkson@gmail.com",
+                phone: "(99) 99111-1456"
+            };
+
+            const eventDateFormatted = data.eventDate ? new Date(data.eventDate).toLocaleDateString('pt-BR', {timeZone: 'UTC'}) : '[Data do Evento]';
+            const startTime = data.eventTime || '[Hora de Início]';
+            
+            const imageRightsClause = data.imageRights ? 
+                '6.1. O(A) CONTRATANTE autoriza o CONTRATADO a utilizar as fotografias oriundas deste contrato em seu portfólio (físico e online), redes sociais, site, concursos fotográficos e exposições, com o objetivo de divulgar seu trabalho, sem que isso acarrete qualquer ônus.' :
+                '6.1. O(A) CONTRATANTE NÃO AUTORIZA o CONTRATADO a utilizar as fotografias em seu portfólio, redes sociais ou qualquer meio de divulgação.';
+
+            const packageSelection = data.civilPackage ? `    Pacote Selecionado: ${data.civilPackage}\n\n` : '';
+            const observations = data.package ? `\n    Observações Adicionais: ${data.package}` : '';
+            
+            let deliverables = '';
+            switch (data.civilPackage) {
+                case 'Tradicional (2x de R$ 600,00)':
+                    deliverables = `    a) 50 (cinquenta) fotos editadas.
+    b) Entrega via galeria online.`;
+                    break;
+                case 'Premium (2x de R$ 750,00)':
+                    deliverables = `    a) Todas as fotos do evento editadas em alta resolução.
+    b) Pen drive personalizado.
+    c) Caixa personalizada.`;
+                    break;
+                case 'Super Premium (3x de R$ 800,00)':
+                    deliverables = `    a) Todas as fotos do evento em alta resolução.
+    b) Pen drive personalizado.
+    c) Caixa personalizada.
+    d) Álbum 20x30 com 20 páginas.`;
+                    break;
+                default:
+                    deliverables = `    a) [Itens a serem entregues não especificados - selecione um pacote].`;
+            }
+
+            return `
+CONTRATO DE PRESTAÇÃO DE SERVIÇOS FOTOGRÁFICOS – CASAMENTO CIVIL
+
+PARTES
+
+CONTRATANTE: ${data.clientName || '[Nome do Cliente]'}, portador(a) do CPF nº ${data.clientCPF || '[CPF]'} e RG nº ${data.clientRG || '[RG]'}, residente e domiciliado(a) em ${data.clientAddress || '[Endereço]'}, doravante denominado(a) CONTRATANTE.
+
+CONTRATADO: ${contractor.name}, fotógrafo, portador do CPF nº ${contractor.cpf}, com endereço profissional em ${contractor.address}, e-mail: ${contractor.email}, telefone: ${contractor.phone}, doravante denominado CONTRATADO.
+
+As partes acima qualificadas firmam o presente contrato, que se regerá pelas seguintes cláusulas e condições:
+
+CLÁUSULA 1ª – DO OBJETO
+1.1. O presente contrato tem por objeto a prestação de serviços de cobertura fotográfica da cerimônia de casamento civil e/ou recepção do(a) CONTRATANTE, a ser realizado(a) em ${eventDateFormatted}.
+1.2. O serviço contratado compreende:
+    a) Cobertura fotográfica por ${data.eventDuration || '[Nº]'} horas consecutivas, a partir das ${startTime}.
+    c) A cobertura incluirá os principais momentos do evento, como a cerimônia no cartório/local, fotos protocolares com familiares e padrinhos, e a recepção (se houver).
+
+CLÁUSULA 2ª – DO PACOTE E ENTREGA DO MATERIAL
+2.1. O material a ser entregue pelo CONTRATADO ao(à) CONTRATANTE consiste em:
+${packageSelection}${deliverables}${observations}
+2.2. O prazo para entrega da galeria online para seleção (se aplicável) e/ou entrega final do material digital é de até 30 (trinta) dias úteis, contados a partir do primeiro dia útil após a data do evento.
+2.3. Fica expressamente acordado que os arquivos brutos (formato RAW) não serão entregues em nenhuma hipótese.
+
+CLÁUSULA 3ª – DAS OBRIGAÇÕES
+3.1. Compete ao CONTRATADO: prestar o serviço com zelo, respeitar os horários acordados e realizar o backup seguro dos arquivos por um período de 12 (doze) meses.
+3.2. Compete ao CONTRATANTE: realizar os pagamentos, fornecer as condições necessárias para a execução do trabalho e informar sobre momentos específicos que deseje registrar.
+
+CLÁUSULA 4ª – DO VALOR E FORMA DE PAGAMENTO
+4.1. O valor total deste contrato é de R$ ${parseFloat(data.value || 0).toFixed(2)}.
+4.2. O pagamento será realizado da seguinte forma: ${data.paymentMethod || '[Forma de Pagamento]'}.
+
+CLÁUSULA 5ª – DA REMARCAÇÃO E CANCELAMENTO
+5.1. Remarcação pelo CONTRATANTE: Deve ser solicitada por escrito com no mínimo 30 dias de antecedência e a nova data estará sujeita à disponibilidade na agenda do CONTRATADO.
+5.2. Cancelamento pelo CONTRATANTE (Rescisão): Em caso de rescisão, o valor do sinal será retido a título de multa. Se o cancelamento ocorrer com menos de 30 dias de antecedência, a multa será de 50% do valor total do contrato.
+5.3. Impossibilidade do CONTRATADO: Em caso de força maior, o CONTRATADO enviará um substituto qualificado ou, se não for possível, devolverá integralmente os valores pagos.
+
+CLÁUSULA 6ª – DO DIREITO DE USO DE IMAGEM
+${imageRightsClause}
+
+CLÁUSULA 7ª – DO FORO
+7.1. Fica eleito o foro da Comarca de Imperatriz, Estado do Maranhão, para dirimir quaisquer dúvidas oriundas do presente contrato.
+
+E, por estarem justos e contratados, assinam o presente instrumento em 2 (duas) vias de igual teor e forma.
+
+${city}/MA, ${today.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}.
+
+
+_________________________________________
+${data.clientName || '[Nome do Cliente]'}
+CPF: ${data.clientCPF || '[CPF]'}
+
+_________________________________________
+${contractor.name}
+CPF: ${contractor.cpf}
 `;
         }
 
