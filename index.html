@@ -199,19 +199,7 @@
                 <div id="content-text" class="hidden">
                     <label for="quickText" class="block text-sm font-medium text-gray-700 mb-2">Entrada de Dados Rápida</label>
                     <p class="text-xs text-gray-500 mb-3">Complete os dados abaixo. O sistema irá distribuir as informações automaticamente no contrato selecionado.</p>
-                    <textarea id="quickText" rows="15" class="w-full form-input p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">Tipo de Contrato: Casamento
-Nome Completo: 
-CPF: 
-Endereço: 
-Email: 
-Telefone: 
-Data do Evento: 
-Hora de Início: 
-Local do Evento: 
-Pacote de Casamento: 
-Duração (horas): 08 horas
-Forma de Pagamento: Entrada e o restante dividido.
-Autoriza uso de imagem: Sim</textarea>
+                    <textarea id="quickText" rows="15" class="w-full form-input p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
                 </div>
 
                 <div class="mt-8 text-center">
@@ -246,6 +234,7 @@ Autoriza uso de imagem: Sim</textarea>
         const generateButton = document.getElementById('generateButton');
         const outputSection = document.getElementById('outputSection');
         const contractOutput = document.getElementById('contractOutput');
+        const quickText = document.getElementById('quickText');
         
         let activeTab = 'form';
 
@@ -266,7 +255,7 @@ Autoriza uso de imagem: Sim</textarea>
             contentForm.classList.add('hidden');
         });
 
-        // Ocultar/mostrar campos de evento
+        // Ocultar/mostrar campos de evento e atualizar template de texto rápido
         document.getElementById('contractType').addEventListener('change', (e) => {
             const eventDetails = document.getElementById('eventDetails');
             const weddingPackageSection = document.getElementById('weddingPackageSection');
@@ -293,6 +282,8 @@ Autoriza uso de imagem: Sim</textarea>
             packageLabel.textContent = 'Pacote Escolhido / Descrição do Serviço';
             packageTextarea.placeholder = 'Descreva o serviço ou pacote contratado.';
             packageTextarea.required = true;
+            
+            let template = 'Selecione um tipo de contrato para ver o modelo de entrada rápida.';
 
             switch(e.target.value) {
                 case '1': // Festa Infantil
@@ -300,21 +291,67 @@ Autoriza uso de imagem: Sim</textarea>
                     packageLabel.textContent = 'Observações / Itens Adicionais';
                     packageTextarea.placeholder = 'Adicione itens não inclusos no pacote padrão ou outras observações.';
                     packageTextarea.required = false;
+                    template = `Tipo de Contrato: Festa Infantil
+Nome Completo: 
+CPF: 
+Endereço: 
+Email: 
+Telefone: 
+Data do Evento: 
+Hora de Início: 
+Local do Evento: 
+Pacote Festa Infantil: 
+Duração (horas): 4
+Forma de Pagamento: 
+Autoriza uso de imagem: Sim`;
                     break;
                 case '2': // Casamento
                     weddingPackageSection.classList.remove('hidden');
                     packageLabel.textContent = 'Observações / Itens Adicionais';
                     packageTextarea.placeholder = 'Adicione itens não inclusos no pacote padrão ou outras observações.';
                     packageTextarea.required = false;
+                     template = `Tipo de Contrato: Casamento
+Nome Completo: 
+CPF: 
+Endereço: 
+Email: 
+Telefone: 
+Data do Evento: 
+Hora de Início: 
+Local do Evento: 
+Pacote de Casamento: 
+Duração (horas): 08 horas
+Forma de Pagamento: Entrada e o restante dividido.
+Autoriza uso de imagem: Sim`;
                     break;
                 case '3': // Casamento Civil
                     civilPackageSection.classList.remove('hidden');
                     packageLabel.textContent = 'Observações / Itens Adicionais';
                     packageTextarea.placeholder = 'Adicione itens não inclusos no pacote padrão ou outras observações.';
                     packageTextarea.required = false;
+                    template = `Tipo de Contrato: Casamento Civil
+Nome Completo: 
+CPF: 
+Endereço: 
+Email: 
+Telefone: 
+Data do Evento: 
+Hora de Início: 
+Local do Evento: 
+Pacote Casamento Civil: 
+Duração (horas): 
+Forma de Pagamento: 
+Autoriza uso de imagem: Sim`;
                     break;
                 case '5': // Entrada de Dados
                     eventDetails.classList.add('hidden');
+                    template = `Tipo de Contrato: Entrada de Dados
+Nome Completo: 
+CPF: 
+Endereço: 
+Email: 
+Telefone: 
+Descrição do Serviço: `;
                     break;
                 case '6': // Formatura Infantil
                     formaturaPackageSection.classList.remove('hidden');
@@ -325,9 +362,25 @@ Autoriza uso de imagem: Sim</textarea>
                     packageTextarea.placeholder = 'Adicione itens não inclusos no pacote padrão ou outras observações.';
                     packageTextarea.required = false;
                     document.querySelector('label[for="eventDate"]').textContent = 'Data do Evento Principal (Baile)';
+                    template = `Tipo de Contrato: Formatura Infantil
+Nome do Pai ou Mãe: 
+CPF: 
+Email: 
+Telefone: 
+Nome do Formando(a): 
+Turma: 
+Endereço: 
+Pacote Formatura Infantil: 
+Forma de Pagamento: 
+Autoriza uso de imagem: Sim`;
                     break;
             }
+            quickText.value = template;
         });
+        
+        // Trigger change on load to set initial quick text
+        document.getElementById('contractType').dispatchEvent(new Event('change'));
+
 
         // Preencher valor do contrato ao selecionar pacote de casamento
         document.getElementById('weddingPackage').addEventListener('change', (e) => {
@@ -1002,6 +1055,34 @@ CLÁUSULA 5ª – DA REMARCAÇÃO E CANCELAMENTO
     a) Cancelamento com mais de 180 dias de antecedência da data do evento: multa de 20%.
     b) Cancelamento entre 179 e 90 dias de antecedência: multa de 35%.
     c) Cancelamento com menos de 89 dias de antecedência: multa de 50%.
+    d) O serviço será realizado por 2 (dois) fotógrafos.
+
+CLÁUSULA 2ª – DO PACOTE E ENTREGA DO MATERIAL
+2.1. O material a ser entregue pelo CONTRATADO ao(à) CONTRATANTE consiste em:
+${packageSelection}${deliverables}${observations}
+2.2. O prazo para entrega da galeria online com as fotos do casamento é de até 90 (noventa) dias úteis, contados a partir do primeiro dia útil após a data do evento.
+2.3. Fica expressamente acordado que os arquivos brutos (formato RAW) não serão entregues em nenhuma hipótese, pois compõem o processo de trabalho e a propriedade intelectual do CONTRATADO.
+
+CLÁUSULA 3ª – DAS OBRIGAÇÕES
+3.1. Compete ao CONTRATADO:
+    a) Prestar o serviço com zelo e profissionalismo, utilizando equipamento profissional adequado.
+    b) Respeitar a data, horários e locais acordados.
+    c) Realizar o backup e armazenamento seguro dos arquivos por um período de 12 (doze) meses após a entrega da galeria online.
+3.2. Compete ao CONTRATANTE:
+    a) Realizar os pagamentos nas datas e valores acordados na Cláusula 4ª.
+    b) Fornecer as condições necessárias para a execução do trabalho, incluindo um local seguro para os equipamentos e alimentação para a equipe do CONTRATADO durante o período da cobertura.
+    c) Informar ao CONTRATADO sobre qualquer momento específico ou pessoa que exija atenção especial durante o evento.
+
+CLÁUSULA 4ª – DO VALOR E FORMA DE PAGAMENTO
+4.1. O valor total deste contrato é de R$ ${parseFloat(data.value || 0).toFixed(2)}.
+4.2. O pagamento será realizado da seguinte forma: ${data.paymentMethod || '[Forma de Pagamento]'}.
+
+CLÁUSULA 5ª – DA REMARCAÇÃO E CANCELAMENTO
+5.1. Remarcação pelo CONTRATANTE: A solicitação de remarcação deve ser feita por escrito com no mínimo 60 dias de antecedência. A nova data estará sujeita à disponibilidade na agenda do CONTRATADO. Uma única remarcação será isenta de taxas, desde que feita no prazo. Demais remarcações ou remarcações fora do prazo estarão sujeitas a uma taxa administrativa de 10% do valor do contrato. Se a nova data for em outro ano, o valor do contrato poderá ser reajustado conforme a tabela de preços vigente.
+5.2. Cancelamento pelo CONTRATANTE (Rescisão): Em caso de rescisão por parte do(a) CONTRATANTE, serão aplicadas as seguintes multas (cláusula penal) sobre o valor total do contrato, a título de perdas e danos, sem prejuízo do sinal já pago, que não é reembolsável:
+    a) Cancelamento com mais de 180 dias de antecedência da data do evento: multa de 20%.
+    b) Cancelamento entre 179 e 90 dias de antecedência: multa de 35%.
+    c) Cancelamento com menos de 89 dias de antecedência: multa de 50%.
 5.3. Impossibilidade do CONTRATADO: Na rara eventualidade de o CONTRATADO não poder comparecer por motivo de força maior, ele se compromete a enviar outro fotógrafo de sua equipe de igual ou superior capacidade técnica, com a aprovação prévia do(a) CONTRATANTE. Caso não seja possível a substituição ou o(a) CONTRATANTE não aprove o substituto, o contrato será rescindido e todos os valores pagos serão devolvidos integralmente, acrescidos de uma multa de 20% do valor do contrato.
 
 CLÁUSULA 6ª – DO DIREITO DE USO DE IMAGEM
@@ -1011,7 +1092,7 @@ CLÁUSULA 7ª – DO CASO FORTUITO OU FORÇA MAIOR
 7.1. Nenhuma das partes será responsabilizada pelo não cumprimento de suas obrigações se este for causado por eventos de caso fortuito ou força maior (conforme Art. 393 do Código Civil), tais como desastres naturais, guerras, pandemias ou decretos governamentais que impeçam a realização do evento. Nesses casos, a data do evento será remarcada em comum acordo, sem custos adicionais, no prazo de até 12 meses.
 
 CLÁUSULA 8ª – DO FORO
-8.1. Fica eleito o foro da Comarca de Imperatriz, Estado do Maranhão, para dirimir quaisquer dúvidas ou litígios oriundos do presente contrato, com renúncia expressa a qualquer outro, por mais privilegiado que seja.
+8.1. Fica eleito o foro da Comarca de Imperatriz, Estado do Maranhão, para dirimir quaisquer dúvidas oriundas do presente contrato, com renúncia expressa a qualquer outro, por mais privilegiado que seja.
 
 E, por estarem justos e contratados, assinam o presente instrumento em 2 (duas) vias de igual teor e forma.
 
@@ -1044,4 +1125,6 @@ CPF: ${contractor.cpf}
     </script>
 </body>
 </html>
+" selected in the canvas. I want to make the following changes to this code: "
+Ajustar também para os eventos em geral.  não precisa ter pacote.
 
